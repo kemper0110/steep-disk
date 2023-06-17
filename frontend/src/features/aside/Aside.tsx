@@ -17,7 +17,7 @@ const Aside = () => {
     // TODO: aside fixed sizes
     const tabs = ['Последние', 'Файлы', 'Фото', 'Альбомы', 'Общий доступ', 'Семья', 'История', 'Архив', 'Загрузки', 'Сканы', 'Корзина']
     return (
-        <div className='bg-white/60 w-[272px] h-[868px] rounded-l-2xl flex flex-col p-4 gap-2'>
+        <div className='bg-white/60 min-w-[272px] rounded-l-2xl flex flex-col p-4 gap-2'>
             <UploadButton/>
             <MakeFolderButton/>
             <ul className='flex flex-col'>

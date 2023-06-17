@@ -1,11 +1,13 @@
 package com.steepdisk.steepdisk.service;
 
-import com.steepdisk.steepdisk.model.Entry;
-import com.steepdisk.steepdisk.model.File;
-import com.steepdisk.steepdisk.model.Folder;
+import com.steepdisk.steepdisk.model.storage.Entry;
+import com.steepdisk.steepdisk.model.storage.File;
+import com.steepdisk.steepdisk.model.storage.Folder;
 import lombok.SneakyThrows;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,14 +37,34 @@ public class FsEntryService implements EntryService {
         }
     }
 
+    @SneakyThrows
     @Override
     public void delete(String path) {
+        Path p = location.resolve(path);
+        java.io.File f = p.toFile();
+        if (f.isDirectory()) {
+            FileUtils.deleteDirectory(f);
+        } else if (f.isFile()) {
+            FileUtils.forceDelete(f);
+        }
+    }
 
+    @SneakyThrows
+    @Override
+    public void move(String from, String to) {
+        var from_p = location.resolve(from);
+        var to_p = location.resolve(to);
+        Files.move(from_p, to_p);
     }
 
     @Override
+    @SneakyThrows
     public Resource loadAsResource(String filename) {
-        return null;
+        Path file = location.resolve(filename);
+        Resource resource = new UrlResource(file.toUri());
+        if (resource.exists() || resource.isReadable())
+            return resource;
+        throw new Exception("Could not read file: " + filename);
     }
 
     @SneakyThrows
@@ -55,8 +77,7 @@ public class FsEntryService implements EntryService {
             var filepath = location.relativize(p).toString();
             if (file.isDirectory())
                 return new Folder(file.getName(), filepath);
-            else if (file.isFile())
-            {
+            else if (file.isFile()) {
                 try {
                     return new File(file.getName(), filepath, "", Files.size(p));
                 } catch (IOException e) {

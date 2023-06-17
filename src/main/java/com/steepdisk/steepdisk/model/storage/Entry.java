@@ -1,4 +1,4 @@
-package com.steepdisk.steepdisk.model;
+package com.steepdisk.steepdisk.model.storage;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;

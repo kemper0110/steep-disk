@@ -1,6 +1,4 @@
-package com.steepdisk.steepdisk.model;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+package com.steepdisk.steepdisk.model.storage;
 
 public final class File extends Entry {
     private String mimetype;

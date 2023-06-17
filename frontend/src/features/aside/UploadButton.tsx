@@ -1,21 +1,12 @@
 import React, {ChangeEvent} from 'react';
 import {useSelector} from "react-redux";
 import {RootState} from "../../store/store";
-import axios from "axios";
 import {useMutation, useQueryClient} from "react-query";
-
-function uploadFile(file: File, path: string) {
-    const form = new FormData()
-    form.append('file', file)
-    form.append('path', path)
-    // console.log("sending to path ", path)
-    return axios.post('http://localhost:8080/entry', form)
-}
+import {uploadFile} from "../api/api";
 
 const UploadButton = () => {
     const queryClient = useQueryClient()
     const path = useSelector((state: RootState) => state.entries.path)
-    // ['entries', path],
     const upload = useMutation((file: File) => uploadFile(file, path), {
         onSuccess: () => queryClient.invalidateQueries({queryKey: ['entries', path]})
     })

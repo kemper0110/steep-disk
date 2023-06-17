@@ -1,6 +1,4 @@
-package com.steepdisk.steepdisk.model;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+package com.steepdisk.steepdisk.model.storage;
 
 public final class Folder extends Entry {
     public Folder(String name, String path) {
